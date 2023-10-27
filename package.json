@@ -1,0 +1,36 @@
+{
+  "name": "jira-blog-koa2",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "cross-env NODE_ENV=dev nodemon bin/www",
+    "prd": "cross-env NODE_ENV=production nodemon bin/www",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cross-env": "^7.0.3",
+    "install": "^0.13.0",
+    "koa": "^2.14.2",
+    "koa-bodyparser": "^4.4.1",
+    "koa-convert": "^2.0.0",
+    "koa-generic-session": "^2.3.1",
+    "koa-json": "^2.0.2",
+    "koa-logger": "^3.2.1",
+    "koa-morgan": "^1.0.1",
+    "koa-onerror": "^4.2.0",
+    "koa-redis": "^4.0.1",
+    "koa-router": "^11.0.2",
+    "koa-static": "^5.0.0",
+    "mysql": "^2.18.1",
+    "npm": "^10.2.1",
+    "redis": "^4.6.10",
+    "xss": "^1.0.14"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}
