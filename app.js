@@ -1,5 +1,5 @@
-const session = require("koa-generic-session");
-const redisStore = require("koa-redis");
+// const session = require("koa-generic-session");
+// const redisStore = require("koa-redis");
 const Koa = require("koa");
 const app = new Koa();
 // const views = require('koa-views')
@@ -10,9 +10,12 @@ const logger = require("koa-logger");
 const fs = require("fs");
 const path = require("path");
 const morgan = require("koa-morgan");
+const jwt = require("koa-jwt");
 
-const blog = require("./routes/blog");
 const user = require("./routes/user");
+const question = require("./routes/question");
+
+const { ErrorModel } = require("./model/resModel");
 
 // error handler
 onerror(app);
@@ -53,28 +56,31 @@ if (ENV !== "production") {
     })
   );
 }
+// 自定义401
+app.use(function (ctx, next) {
+  return next().catch((err) => {
+    if (401 == err.status) {
+      ctx.status = 200;
+      ctx.body = new ErrorModel("未认证");
+    } else {
+      throw err;
+    }
+  });
+});
 
-// session
-const redisClient = require("./db/redis");
-const { REDIS_CONF } = require("./conf/db");
-app.keys = ["@ADjec_187#9_"];
+// Token 验证中间件
+// 配置JWT中间件
 app.use(
-  session({
-    store: redisStore({
-      // Options specified here
-      // client: redisClient,
-      all:`${REDIS_CONF.host}:${REDIS_CONF.port}`
-    }),
-  })
+  jwt({ secret: "my-secret" }).unless({ path: [/\/login/, /\/register/] })
 );
 
 // routes
-app.use(blog.routes(), blog.allowedMethods());
 app.use(user.routes(), user.allowedMethods());
+app.use(question.routes(), question.allowedMethods());
 
 // error-handling
 app.on("error", (err, ctx) => {
-  console.error("server error", err, ctx);
+  console.error("server error", err);
 });
 
 module.exports = app;

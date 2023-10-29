@@ -1,49 +1,28 @@
-const { exec, escape } = require("../db/mysql");
-const { encrypt } = require("../utils/crypet");
+const User = require("../db/modal/user");
+// const { encrypt } = require("../utils/crypet");
 
-const login = (username, password) => {
+const login = async (username, password) => {
   username = escape(username);
 
-  password = encrypt(password);
+  //   password = encrypt(password);
   password = escape(password);
-  const sql = `select * from users where username=${username} and password=${password}`;
-  return exec(sql).then((selectData) => {
-    console.log(sql);
-    return selectData[0] || {};
-  });
+  const result = await User.findOne({ username, password });
+  return result;
 };
 
-// 获取当前用户的信息
-const getUserInfo = (username) => {
-  const sql = `select * from component`;
-  return exec(sql).then((userData) => {
-    let componentList = userData;
-    let arr = [];
-    arr = componentList.map((i) => {
-      return new Promise((resolve) => {
-        const { id } = i;
-        exec(`select * from component_props where c_id = ${id}`).then(
-          (props) => {
-            resolve(props[0]);
-          }
-        );
-      });
-    });
-    return Promise.all(arr).then((data) => {
-      componentList.forEach((a) => {
-        const index = data.findIndex((i) => a.id === i.c_id);
-        if (index >= 0) {
-          a.props = data[index];
-          delete a.props.c_id;
-        }
-      });
-      return componentList;
-    });
-    // return componentList;
-  });
+const register = async (username, password, nickname) => {
+  const result = await User.create({ username, password, nickname });
+  return result;
+};
+
+// // 获取当前用户的信息
+const getUserInfo = async (username) => {
+  const result = await User.findOne({ username }, { username: 1, nickname: 1 });
+  return result;
 };
 
 module.exports = {
   login,
+  register,
   getUserInfo,
 };

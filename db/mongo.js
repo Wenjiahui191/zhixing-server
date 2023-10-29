@@ -1,26 +1,20 @@
-const { MYSQL_CONF } = require("../conf/db");
-const mysql = require('mysql')
+// getting-started.js
+const mongoose = require("mongoose");
+const { MONGODB_CONF } = require("../conf/db");
 
-// 创建链接
-const con = mysql.createConnection(MYSQL_CONF)
+// const url = `mongodb://${MONGODB_CONF.host}:${MONGODB_CONF.port}/${MONGODB_CONF.database}`;
 
-// 进行链接
-con.connect()
+const url = "mongodb://116.205.226.220:27017/question";
+async function main() {
+  await mongoose.connect(url);
 
-// 数据库执行语句
-function exec(sql) {
-    return new Promise((resolve, reject) => {
-        con.query(sql, (err, result) => {
-            if (err) {
-                reject(err)
-                return
-            }
-            resolve(result)
-        })
-    })
+  // use `await mongoose.connect('mongodb://user:password@127.0.0.1:27017/test');` if your database has auth enabled
 }
 
-module.exports = {
-    exec,
-    escape:mysql.escape
-};
+main()
+  .then(() => {
+    console.log("连接成功");
+  })
+  .catch((err) => console.error(err));
+
+module.exports = mongoose;
