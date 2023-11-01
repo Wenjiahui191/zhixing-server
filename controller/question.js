@@ -1,4 +1,3 @@
-const { default: mongoose } = require("mongoose");
 const Question = require("../db/modal/question");
 const dayjs = require("dayjs");
 
@@ -15,6 +14,9 @@ const getList = async (query) => {
   const list = await Question.find({
     title: { $regex: keyword },
     ...params,
+  },{
+    answerList:0,
+    componentList:0,
   })
     .skip((page - 1) * pageSize)
     .limit(pageSize);
@@ -34,6 +36,7 @@ const newQuestion = async () => {
     isStar: false,
     isDeleted: false,
     isPublished: false,
+    answerCount:0,
     createAt: dayjs().format("YYYY-MM-DD HH:mm:ss"),
   });
   return result;
@@ -57,6 +60,9 @@ const deleteQuestion = async (id) => {
 const copyQuestion = async (id) => {
   let copyItem = await Question.findOne({ _id: id }).lean();
   delete copyItem._id;
+  copyItem.isPublished = false
+  copyItem.answerCount = 0
+  copyItem.createAt = dayjs().format('YYYY-MM-DD HH:mm:ss')
   const result = await Question.create(copyItem);
 
   return result;

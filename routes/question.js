@@ -69,7 +69,7 @@ router.patch("/:questionId", async function (ctx, next) {
 router.delete("/", async function (ctx, next) {
   const questionIds = ctx.request.body;
   console.log(ctx.request.body);
-  if (!questionIds.lenght) {
+  if (!questionIds.length) {
     ctx.body = new ErrorModel("问卷id不能为空");
   }
 
@@ -79,13 +79,11 @@ router.delete("/", async function (ctx, next) {
     result.push(data);
   }
 
-  console.log(result);
-
-  //   if (result.matchedCount) {
-  //     ctx.body = new SuccessModel({ id: questionId });
-  //     return;
-  //   }
-  //   ctx.body = new ErrorModel("删除问卷失败");
+  if (result.length) {
+    ctx.body = new SuccessModel('删除成功');
+    return;
+  }
+  ctx.body = new ErrorModel("删除问卷失败");
 });
 
 // 复制问卷信息

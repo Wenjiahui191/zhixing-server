@@ -1,5 +1,15 @@
 const mongoose = require("../mongo");
 
+const AnswerSchema = new mongoose.Schema(
+  {
+      userId: String,
+      answerList: [
+          { componentId: String, value: String }
+      ]
+  },
+  { versionKey: false }
+);
+
 const QuestionSchema = new mongoose.Schema(
   {
     title: String,
@@ -8,7 +18,9 @@ const QuestionSchema = new mongoose.Schema(
     css: String,
     isPublished: Boolean,
     componentList: Array,
-    createAt: Date,
+    answerCount:Number,
+    answers:[{type:AnswerSchema}],
+    createAt: String,
     isDeleted: Boolean,
     isStar: Boolean,
   },

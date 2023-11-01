@@ -6,7 +6,7 @@ function generateToken(user) {
     nickname: user.nickname,
   };
 
-  const token = jwt.sign(payload, "my-secret", { expiresIn: "1h" });
+  const token = jwt.sign(payload, "my-secret", { expiresIn: "24h" });
 
   return token;
 }

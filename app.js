@@ -14,6 +14,8 @@ const jwt = require("koa-jwt");
 
 const user = require("./routes/user");
 const question = require("./routes/question");
+const answer = require('./routes/answer');
+const stat = require('./routes/stat');
 
 const { ErrorModel } = require("./model/resModel");
 
@@ -71,12 +73,20 @@ app.use(function (ctx, next) {
 // Token 验证中间件
 // 配置JWT中间件
 app.use(
-  jwt({ secret: "my-secret" }).unless({ path: [/\/login/, /\/register/] })
+  jwt({ secret: "my-secret" }).unless({
+    path: [/\/login/, /\/register/], custom: (ctx) => {
+      if (ctx.path.match(/^\/api\/question\/[a-zA-Z0-9]+$/) && ctx.method === 'GET') return true
+      if (ctx.path.match(/^\/api\/answer/) && ctx.method === 'POST') return true
+      return false
+    }
+  })
 );
 
 // routes
 app.use(user.routes(), user.allowedMethods());
 app.use(question.routes(), question.allowedMethods());
+app.use(answer.routes(), answer.allowedMethods());
+app.use(stat.routes(), stat.allowedMethods());
 
 // error-handling
 app.on("error", (err, ctx) => {
