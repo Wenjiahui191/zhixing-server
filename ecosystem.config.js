@@ -12,7 +12,7 @@ module.exports = {
         "node_modules",
         "logs",
       ],
-      instances: "4",
+      instances: "1",
       error_file: "./logs/error.log", // 错误日志文件
       out_file: "./logs/out.log", // 正常日志文件
       merge_logs: true, // 设置追加日志而不是新建日志

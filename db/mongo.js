@@ -3,8 +3,10 @@ const mongoose = require("mongoose");
 const { MONGODB_CONF } = require("../conf/db");
 
 // const url = `mongodb://${MONGODB_CONF.host}:${MONGODB_CONF.port}/${MONGODB_CONF.database}`;
+const {host,port,database,username,password}=MONGODB_CONF
 
-const url = "mongodb://116.205.226.220:27017/question";
+const url=`mongodb://${username}:${password}@${host}:${port}/${database}`
+console.log("连接数据库："+url)
 async function main() {
   await mongoose.connect(url);
 

@@ -43,6 +43,12 @@ app.use(async (ctx, next) => {
   console.log(`${ctx.method} ${ctx.url} - ${ms}ms`);
 });
 
+app.use(async (ctx,next) => {
+  const ipAddress = ctx.req.connection.remoteAddress;
+  console.log(ipAddress)
+  await next();
+});
+
 const ENV = process.env.NODE_ENV;
 if (ENV !== "production") {
   app.use(morgan("dev"));
@@ -75,7 +81,9 @@ app.use(function (ctx, next) {
 app.use(
   jwt({ secret: "my-secret" }).unless({
     path: [/\/login/, /\/register/], custom: (ctx) => {
+      console.log(ctx.path)
       if (ctx.path.match(/^\/api\/question\/[a-zA-Z0-9]+$/) && ctx.method === 'GET') return true
+      if (ctx.path.match(/^\/question\/[a-zA-Z0-9]+$/) && ctx.method === 'GET') return true
       if (ctx.path.match(/^\/api\/answer/) && ctx.method === 'POST') return true
       return false
     }
